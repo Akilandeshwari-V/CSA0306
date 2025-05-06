@@ -1,79 +1,45 @@
 #include <stdio.h>
 
-#define SIZE 100
-
-char stack[SIZE];
-int top = -1;
-
-void push(char c) {
-    if (top < SIZE - 1) {
-        top++;
-        stack[top] = c;
-    }
-}
-
-char pop() {
-    if (top >= 0) {
-        char temp = stack[top];
-        top--;
-        return temp;
-    }
-    return '\0';
-}
-
-int precedence(char op) {
-    if (op == '+' || op == '-') return 1;
-    if (op == '*' || op == '/') return 2;
-    return 0;
-}
-
-int isOperand(char ch) {
-    // Returns 1 if ch is a letter or digit
-    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
-}
-
-void infixToPostfix(char infix[]) {
+int main() {
+    char stack[100];
+    char infix[100];
+    int top = -1;
     int i = 0;
-    char ch;
-    
-    while (infix[i] != '\0') {
-        ch = infix[i];
 
-        if (isOperand(ch)) {
-            printf("%c", ch);  // Directly print operands
-        }
-        else if (ch == '(') {
-            push(ch);
-        }
-        else if (ch == ')') {
-            while (top != -1 && stack[top] != '(') {
-                printf("%c", pop());
+    printf("Enter infix expression (e.g., a+b*c): ");
+    scanf("%s", infix);
+
+    printf("Postfix expression: ");
+
+    while (infix[i] != '\0') {
+        char ch = infix[i];
+
+        // Check if it's a variable (a-z or A-Z)
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+            printf("%c", ch);
+        } else { // Operator
+            while (top != -1) {
+                char op = stack[top];
+                int p1 = (ch == '+' || ch == '-') ? 1 : 2;
+                int p2 = (op == '+' || op == '-') ? 1 : 2;
+
+                if (p2 >= p1) {
+                    printf("%c", stack[top--]);
+                } else {
+                    break;
+                }
             }
-            pop(); // Remove '('
-        }
-        else {  // Operator
-            while (top != -1 && precedence(stack[top]) >= precedence(ch)) {
-                printf("%c", pop());
-            }
-            push(ch);
+            stack[++top] = ch;
         }
 
         i++;
     }
 
+    // Pop remaining operators
     while (top != -1) {
-        printf("%c", pop());
+        printf("%c", stack[top--]);
     }
-}
 
-int main() {
-    char expr[SIZE];
-
-    printf("Enter infix expression (e.g., a+b*c): ");
-    scanf("%s", expr);
-
-    printf("Postfix: ");
-    infixToPostfix(expr);
-
+    printf("\n");
     return 0;
 }
