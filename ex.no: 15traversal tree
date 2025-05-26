@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+#define MAX_NODES 10
+
+struct Node {
+    int data;
+    int left;
+    int right;
+};
+
+struct Node tree[MAX_NODES];
+
+void inorder(int index) {
+    if (index == -1) return;
+    inorder(tree[index].left);
+    printf("%d ", tree[index].data);
+    inorder(tree[index].right);
+}
+
+void preorder(int index) {
+    if (index == -1) return;
+    printf("%d ", tree[index].data);
+    preorder(tree[index].left);
+    preorder(tree[index].right);
+}
+
+void postorder(int index) {
+    if (index == -1) return;
+    postorder(tree[index].left);
+    postorder(tree[index].right);
+    printf("%d ", tree[index].data);
+}
+
+int main() {
+    tree[0] = (struct Node){1, 1, 2};  // root: 1
+    tree[1] = (struct Node){2, 3, 4};  // left child of root: 2
+    tree[2] = (struct Node){3, -1, -1}; // right child of root: 3
+    tree[3] = (struct Node){4, -1, -1}; // left child of 2: 4
+    tree[4] = (struct Node){5, -1, -1}; // right child of 2: 5
+
+    printf("Inorder: ");
+    inorder(0);
+    printf("\n");
+
+    printf("Preorder: ");
+    preorder(0);
+    printf("\n");
+
+    printf("Postorder: ");
+    postorder(0);
+    printf("\n");
+
+    return 0;
+}
