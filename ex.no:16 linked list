@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+#define MAX_NODES 100
+
+struct Node {
+    int data;
+    int next;
+};
+
+struct Node nodes[MAX_NODES];
+int head = -1;
+int freeIndex = 0;
+
+int createNode(int data) {
+    if (freeIndex >= MAX_NODES) return -1;
+    nodes[freeIndex].data = data;
+    nodes[freeIndex].next = -1;
+    return freeIndex++;
+}
+
+void insertAtBeginning(int data) {
+    int newIndex = createNode(data);
+    if (newIndex == -1) return;
+    nodes[newIndex].next = head;
+    head = newIndex;
+}
+
+void printList() {
+    int current = head;
+    while (current != -1) {
+        printf("%d -> ", nodes[current].data);
+        current = nodes[current].next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    insertAtBeginning(10);
+    insertAtBeginning(20);
+    insertAtBeginning(30);
+
+    printList();
+
+    return 0;
+}
